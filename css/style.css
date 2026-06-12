@@ -172,45 +172,71 @@ h1, h2, h3 {
 }
 
 /* =========================================================
-   HERO (DESIGN §4.2)
+   HERO (DESIGN §4.2 + §7)
    The client's neon logo is the centerpiece — it must ALWAYS
-   be shown whole, never cropped. So instead of a full-bleed
-   cover background, the logo sits as a contained neon panel
-   floating on the page's black ("the sign in the dark room"),
-   with the headline + CTAs stacked beneath it — no overlap.
+   be shown whole, never cropped.
+
+   Mobile intro: the first 100svh "stage" shows only the logo +
+   CTAs + a scroll arrow. The headline (.hero__text) sits below
+   the fold and is revealed on scroll (JS, behind reduced-motion).
+   Base CSS keeps the headline visible so the site is fully usable
+   with JS off / reduced motion. Desktop reassembles via grid.
    ========================================================= */
-.hero {
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-}
+.hero { position: relative; }
 .hero__inner {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: clamp(16px, 3vh, 32px);
-  padding-top: calc(var(--topbar-h) + 8px);
-  padding-bottom: clamp(28px, 9vh, 72px);
 }
-.hero__media {
-  width: 100%;
+
+/* first screen — logo + CTAs centered, arrow pinned bottom */
+.hero__stage {
+  position: relative;
+  min-height: 100svh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  text-align: center;
+  gap: clamp(20px, 4vh, 36px);
+  padding-top: calc(var(--topbar-h) + 8px);
+  padding-bottom: clamp(56px, 12vh, 96px);   /* room for the arrow */
 }
 .hero__img {
   width: 100%;
   max-width: 440px;
-  max-height: 44svh;          /* keep whole logo on screen with room for text */
+  max-height: 52svh;
   height: auto;
   object-fit: contain;        /* never crop the logo */
   /* feather the artwork's black border seamlessly into the page bg */
   -webkit-mask-image: radial-gradient(120% 115% at 50% 46%, #000 72%, transparent 100%);
   mask-image: radial-gradient(120% 115% at 50% 46%, #000 72%, transparent 100%);
 }
-.hero__content {
+.hero__cta {
   width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.hero__cta .btn { flex: 1 1 0; max-width: 220px; }   /* mobile: share the row */
+
+/* scroll-down hint, anchored to the bottom of the first screen */
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(12px, 3.5vh, 28px);
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--ice-light);
+}
+
+/* headline + sub — below the fold on mobile, revealed on scroll */
+.hero__text {
+  text-align: center;
+  padding-block: clamp(40px, 9vh, 96px) 0;
 }
 .hero__title {
   font-size: clamp(2.2rem, 8.5vw, 4.2rem);
@@ -223,13 +249,21 @@ h1, h2, h3 {
   font-size: 1.0625rem;
   line-height: 1.55;
 }
-.hero__cta {
-  margin-top: 24px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+
+/* intro/motion enhancement — only mobile + motion-OK, only when JS
+   has added .hero--motion. Without it everything stays visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__scroll svg { animation: hero-bob 1.8s ease-in-out infinite; }
+  @keyframes hero-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(4px); }
+  }
 }
-.hero__cta .btn { flex: 1 1 0; max-width: 220px; }   /* mobile: share the row */
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .hero--motion .hero__text { opacity: 0; transform: translateY(16px); }
+  .hero--motion .hero__img,
+  .hero--motion .hero__text { will-change: transform, opacity; }
+}
 
 /* =========================================================
    SECTION HEADS — eyebrow + h2 (DESIGN §2)
@@ -279,26 +313,29 @@ h1, h2, h3 {
 .promise__accent { color: var(--ice); }
 
 /* =========================================================
-   FROST DIVIDER (DESIGN §4 motif) — 120px line + snowflake
+   FROST DIVIDER (DESIGN §4 motif) — line + emphasized snowflake.
+   Placed between every section; the glow flake is the separator.
    ========================================================= */
 .frost-divider {
-  width: 120px;
+  width: 160px;
   margin-inline: auto;
+  margin-block: clamp(4px, 1.5vw, 16px);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 .frost-divider::before,
 .frost-divider::after {
   content: "";
   flex: 1 1 0;
   height: 1px;
-  background: var(--line);
+  background: linear-gradient(var(--dir, 90deg), transparent, var(--line));
 }
+.frost-divider::after { --dir: 270deg; }
 .frost-divider svg {
   display: block;
   color: var(--ice);
-  filter: drop-shadow(0 0 8px var(--glow));
+  filter: drop-shadow(0 0 10px var(--glow)) drop-shadow(0 0 3px var(--glow));
 }
 
 /* =========================================================
@@ -503,20 +540,42 @@ h1, h2, h3 {
   .topbar__phone-text { display: inline; font-size: 1.0625rem; }
   .topbar__phone { gap: 0; }
 
-  /* logo and text side by side, both fully visible, vertically centered */
+  /* Desktop: no intro/parallax. Dissolve the mobile stage and
+     reassemble logo + headline + CTA into the side-by-side layout
+     (DESIGN §4.2). Headline is always visible here. */
+  .hero { min-height: 100svh; display: flex; align-items: center; }
+  .hero__stage { display: contents; }      /* img/cta/arrow join the grid */
+  .hero__scroll { display: none; }
   .hero__inner {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: clamp(300px, 38vw, 440px) 1fr;
+    grid-template-areas:
+      "media text"
+      "media cta";
     align-items: center;
-    text-align: left;
-    gap: clamp(32px, 6vw, 80px);
+    column-gap: clamp(32px, 6vw, 80px);
+    row-gap: clamp(16px, 3vh, 28px);
+    padding-top: calc(var(--topbar-h) + 8px);
     padding-bottom: clamp(40px, 8vh, 96px);
   }
-  .hero__media { flex: 0 0 auto; width: clamp(300px, 38vw, 440px); }
-  .hero__img { max-height: none; }
-  .hero__content { flex: 1 1 0; }
+  .hero__img { grid-area: media; max-height: none; align-self: center; }
+  .hero__text {
+    grid-area: text;
+    align-self: end;
+    text-align: left;
+    padding-block: 0;
+    opacity: 1;            /* never part of the mobile reveal */
+    transform: none;
+  }
   .hero__title { max-width: 14ch; }
   .hero__sub { margin-inline: 0; }
-  .hero__cta { gap: 14px; justify-content: flex-start; }
+  .hero__cta {
+    grid-area: cta;
+    align-self: start;
+    width: auto;
+    gap: 14px;
+    justify-content: flex-start;
+  }
   .hero__cta .btn { flex: 0 0 auto; min-width: 168px; max-width: none; }
 
   /* sticky bar is mobile-only */
