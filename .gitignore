@@ -1,0 +1,16 @@
+# Interní projektové soubory — NEpatří na GitHub (jen web)
+docs/
+CLAUDE.md
+
+# Lokální dev nástroje (náhled na vlastním PC)
+serve.ps1
+Spustit-web.bat
+
+# Testovací a dočasné artefakty
+.playwright-mcp/
+/*.png
+
+# OS smetí
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,582 @@
+/* =========================================================
+   Ice Ice Bejby — style.css
+   Mobile-first. Base = ~390px, then 768px+, then 1100px+.
+   See DESIGN.md for the source-of-truth design system.
+   ========================================================= */
+
+/* ---------- 1. Design tokens (DESIGN §1) ---------- */
+:root {
+  --bg:        #04070B;
+  --surface:   #0A1018;
+  --line:      #16222E;
+  --ice:       #38B6FF;
+  --ice-light: #8FE0FF;
+  --text:      #EAF4FB;
+  --muted:     #8CA2B3;
+  --glow:      rgba(56, 182, 255, 0.35);
+
+  /* layout */
+  --pad-x: 20px;          /* horizontal padding, mobile */
+  --maxw: 1080px;
+  --topbar-h: 64px;
+  --radius: 14px;
+
+  --ff-display: "Archivo", system-ui, sans-serif;
+  --ff-body: "Inter", system-ui, sans-serif;
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--ff-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3 {
+  font-family: var(--ff-display);
+  font-weight: 750;
+  font-stretch: 125%;
+  letter-spacing: 0.01em;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ice-light);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Layout helpers ---------- */
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+
+.section {
+  padding-block: clamp(72px, 14vw, 140px);
+}
+
+/* anchor jumps land below the fixed topbar */
+[id] { scroll-margin-top: calc(var(--topbar-h) + 12px); }
+
+/* =========================================================
+   BUTTONS (DESIGN §6)
+   ========================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: var(--radius);
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-stretch: 110%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 120ms ease, box-shadow 200ms ease, background-color 200ms ease;
+}
+
+.btn--primary {
+  background: var(--ice);
+  color: #04070B;
+  box-shadow: 0 0 24px var(--glow);
+}
+.btn--secondary {
+  background: transparent;
+  color: var(--ice-light);
+  border-color: var(--ice);
+}
+
+@media (hover: hover) {
+  .btn--primary:hover { transform: translateY(-1px); box-shadow: 0 0 28px rgba(56,182,255,0.5); }
+  .btn--secondary:hover { background: rgba(56,182,255,0.08); }
+}
+.btn:active { transform: translateY(0); }
+
+/* =========================================================
+   TOPBAR (DESIGN §4.1)
+   ========================================================= */
+.topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 250ms ease, backdrop-filter 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+}
+.topbar__inner {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar__logo {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.topbar__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  color: var(--ice-light);
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-stretch: 110%;
+  letter-spacing: 0.04em;
+}
+.topbar__phone-icon { display: block; }
+.topbar__phone-text { display: none; }   /* mobile: icon only */
+
+/* scrolled state — added by JS after 40px */
+.topbar.is-scrolled {
+  background: rgba(10, 16, 24, 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+  box-shadow: 0 0 24px var(--glow);
+}
+
+/* =========================================================
+   HERO (DESIGN §4.2)
+   The client's neon logo is the centerpiece — it must ALWAYS
+   be shown whole, never cropped. So instead of a full-bleed
+   cover background, the logo sits as a contained neon panel
+   floating on the page's black ("the sign in the dark room"),
+   with the headline + CTAs stacked beneath it — no overlap.
+   ========================================================= */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+}
+.hero__inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(16px, 3vh, 32px);
+  padding-top: calc(var(--topbar-h) + 8px);
+  padding-bottom: clamp(28px, 9vh, 72px);
+}
+.hero__media {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.hero__img {
+  width: 100%;
+  max-width: 440px;
+  max-height: 44svh;          /* keep whole logo on screen with room for text */
+  height: auto;
+  object-fit: contain;        /* never crop the logo */
+  /* feather the artwork's black border seamlessly into the page bg */
+  -webkit-mask-image: radial-gradient(120% 115% at 50% 46%, #000 72%, transparent 100%);
+  mask-image: radial-gradient(120% 115% at 50% 46%, #000 72%, transparent 100%);
+}
+.hero__content {
+  width: 100%;
+}
+.hero__title {
+  font-size: clamp(2.2rem, 8.5vw, 4.2rem);
+  font-weight: 800;
+}
+.hero__sub {
+  margin: 14px auto 0;
+  max-width: 42ch;
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.hero__cta {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.hero__cta .btn { flex: 1 1 0; max-width: 220px; }   /* mobile: share the row */
+
+/* =========================================================
+   SECTION HEADS — eyebrow + h2 (DESIGN §2)
+   ========================================================= */
+.section__head {
+  position: relative;
+  margin-bottom: clamp(36px, 7vw, 56px);
+}
+/* very subtle radial blue glow behind headings (DESIGN §1, 4–6 %) */
+.section__head::before {
+  content: "";
+  position: absolute;
+  left: -90px;
+  top: -70px;
+  width: 360px;
+  height: 220px;
+  background: radial-gradient(closest-side, rgba(56, 182, 255, 0.05), transparent);
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-stretch: 110%;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8125rem;
+  color: var(--ice-light);
+}
+.section__title {
+  margin-top: 12px;
+  font-size: clamp(1.7rem, 6vw, 2.6rem);
+}
+
+/* =========================================================
+   PROMISE STRIP (DESIGN §4.3) — huge type on black, no decor
+   ========================================================= */
+.promise__text {
+  font-family: var(--ff-display);
+  font-weight: 750;
+  font-stretch: 125%;
+  letter-spacing: 0.01em;
+  line-height: 1.16;
+  text-transform: uppercase;
+  font-size: clamp(1.55rem, 5.8vw, 2.8rem);
+  max-width: 30ch;
+}
+.promise__accent { color: var(--ice); }
+
+/* =========================================================
+   FROST DIVIDER (DESIGN §4 motif) — 120px line + snowflake
+   ========================================================= */
+.frost-divider {
+  width: 120px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.frost-divider::before,
+.frost-divider::after {
+  content: "";
+  flex: 1 1 0;
+  height: 1px;
+  background: var(--line);
+}
+.frost-divider svg {
+  display: block;
+  color: var(--ice);
+  filter: drop-shadow(0 0 8px var(--glow));
+}
+
+/* =========================================================
+   SLUŽBY (DESIGN §4.4) — hairline rows mobile, 3 cols desktop
+   ========================================================= */
+.services {
+  list-style: none;
+  padding: 0;
+}
+.service { padding-block: 26px; }
+.service:first-child { padding-top: 0; }
+.service:last-child { padding-bottom: 0; }
+.service + .service { border-top: 1px solid var(--line); }
+
+.service__icon {
+  color: var(--ice-light);
+  margin-bottom: 14px;
+}
+.service__title { font-size: 1.0625rem; }
+.service__copy {
+  margin-top: 8px;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* =========================================================
+   JAK TO PROBÍHÁ (DESIGN §4.5) — numbered timeline
+   ========================================================= */
+.steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 36px;
+}
+.step {
+  position: relative;
+  padding-left: 56px;
+}
+.step__num {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-stretch: 125%;
+  font-size: 0.9375rem;
+  color: var(--ice-light);
+}
+/* thin connector between numbers (mobile: vertical) */
+.step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 42px;
+  bottom: -30px;
+  width: 1px;
+  background: var(--line);
+}
+.step__title { font-size: 1.0625rem; }
+.step__copy {
+  margin-top: 8px;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* =========================================================
+   PROČ MY (DESIGN §4.6) — plain list, snowflake markers
+   ========================================================= */
+.trust {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+  max-width: 62ch;
+}
+.trust__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.trust__flake {
+  flex: 0 0 auto;
+  margin-top: 5px;
+  color: var(--ice-light);
+}
+
+/* =========================================================
+   CENÍK (DESIGN §4.7) — one sentence + secondary CTA
+   ========================================================= */
+.pricing__copy { max-width: 62ch; }
+.pricing__cta { margin-top: 28px; }
+
+/* =========================================================
+   KONTAKT (DESIGN §4.8) — phone in display type
+   ========================================================= */
+.contact__phone {
+  display: inline-block;
+  font-family: var(--ff-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  font-size: clamp(1.45rem, 7.4vw, 4rem);
+  transition: color 200ms ease;
+}
+.contact__links {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+.contact__email {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ice-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(143, 224, 255, 0.4);
+  text-underline-offset: 4px;
+}
+.contact__billing {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+@media (hover: hover) {
+  .contact__phone:hover { color: var(--ice-light); }
+  .contact__email:hover { text-decoration-color: var(--ice-light); }
+}
+
+/* =========================================================
+   STICKY BOTTOM ACTION BAR (DESIGN §5) — mobile only
+   ========================================================= */
+.actionbar {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 60;
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(10, 16, 24, 0.78);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  transform: translateY(120%);
+  transition: transform 180ms ease;
+}
+.actionbar.is-visible { transform: translateY(0); }
+
+.actionbar__btn {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  border-radius: var(--radius);
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-stretch: 110%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.actionbar__btn--call {
+  background: var(--ice);
+  color: #04070B;
+  box-shadow: 0 0 24px var(--glow);
+}
+.actionbar__btn--wa {
+  background: transparent;
+  color: var(--ice-light);
+  border: 1px solid var(--ice);
+}
+
+/* =========================================================
+   FOOTER (DESIGN §4.9) — one line
+   Mobile: extra bottom padding clears the sticky action bar.
+   ========================================================= */
+.footer {
+  padding-block: 28px calc(96px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+/* =========================================================
+   BREAKPOINT: 768px+ (tablet)
+   ========================================================= */
+@media (min-width: 768px) {
+  :root { --pad-x: 32px; --topbar-h: 72px; }
+
+  /* topbar phone becomes a text link */
+  .topbar__phone-icon { display: none; }
+  .topbar__phone-text { display: inline; font-size: 1.0625rem; }
+  .topbar__phone { gap: 0; }
+
+  /* logo and text side by side, both fully visible, vertically centered */
+  .hero__inner {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: clamp(32px, 6vw, 80px);
+    padding-bottom: clamp(40px, 8vh, 96px);
+  }
+  .hero__media { flex: 0 0 auto; width: clamp(300px, 38vw, 440px); }
+  .hero__img { max-height: none; }
+  .hero__content { flex: 1 1 0; }
+  .hero__title { max-width: 14ch; }
+  .hero__sub { margin-inline: 0; }
+  .hero__cta { gap: 14px; justify-content: flex-start; }
+  .hero__cta .btn { flex: 0 0 auto; min-width: 168px; max-width: none; }
+
+  /* sticky bar is mobile-only */
+  .actionbar { display: none; }
+
+  /* body copy bumps to desktop size (DESIGN §2) */
+  body { font-size: 1.0625rem; }
+
+  /* Služby: 3 clean columns, hairlines are mobile-only */
+  .services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .service,
+  .service:first-child,
+  .service:last-child { padding-block: 0; }
+  .service + .service { border-top: none; }
+
+  /* Jak to probíhá: horizontal timeline */
+  .steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .step {
+    padding-left: 0;
+    padding-top: 54px;
+  }
+  .step:not(:last-child)::before {
+    top: 18px;
+    bottom: auto;
+    left: 48px;
+    right: -28px;
+    width: auto;
+    height: 1px;
+  }
+
+  /* Kontakt: links in a row */
+  .contact__links {
+    flex-direction: row;
+    align-items: center;
+    gap: 28px;
+  }
+
+  /* no sticky bar => no extra footer clearance */
+  .footer { padding-block: 28px; }
+}
+
+/* =========================================================
+   BREAKPOINT: 1100px+ (desktop)
+   ========================================================= */
+@media (min-width: 1100px) {
+  :root { --pad-x: 48px; }
+
+  .hero__sub { font-size: 1.125rem; }
+}
+
+/* =========================================================
+   Reduced motion — kill the topbar/actionbar transitions too
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.001ms !important; }
+}
