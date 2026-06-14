@@ -49,6 +49,15 @@ img { display: block; max-width: 100%; }
 
 a { color: inherit; text-decoration: none; }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button { color: inherit; }
+
 h1, h2, h3 {
   font-family: var(--ff-display);
   font-weight: 750;
@@ -78,6 +87,11 @@ h1, h2, h3 {
 
 /* anchor jumps land below the fixed topbar */
 [id] { scroll-margin-top: calc(var(--topbar-h) + 12px); }
+
+/* smooth anchor scrolling (e.g. hero arrow, topbar logo) — motion only */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 
 /* =========================================================
    BUTTONS (DESIGN §6)
@@ -198,19 +212,23 @@ h1, h2, h3 {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: clamp(20px, 4vh, 36px);
-  padding-top: calc(var(--topbar-h) + 8px);
-  padding-bottom: clamp(56px, 12vh, 96px);   /* room for the arrow */
+  gap: clamp(18px, 3vh, 30px);
+  /* balanced first paint (the glowing logo centered in dark space = the
+     "neon sign in a dark room" thesis). A slight downward bias trims the
+     space below the buttons; the headline reveal then rises to meet them. */
+  padding-top: calc(var(--topbar-h) + 32px);
+  padding-bottom: clamp(40px, 8vh, 60px);
 }
 .hero__img {
   width: 100%;
-  max-width: 440px;
-  max-height: 52svh;
+  max-width: 420px;
+  max-height: 56svh;          /* portrait artwork incl. its reflection */
   height: auto;
   object-fit: contain;        /* never crop the logo */
-  /* feather the artwork's black border seamlessly into the page bg */
-  -webkit-mask-image: radial-gradient(120% 115% at 50% 46%, #000 72%, transparent 100%);
-  mask-image: radial-gradient(120% 115% at 50% 46%, #000 72%, transparent 100%);
+  /* feather the artwork's pure-black canvas into the page bg (top + sides);
+     the lower reflection already fades within the art itself */
+  -webkit-mask-image: radial-gradient(125% 120% at 50% 42%, #000 78%, transparent 100%);
+  mask-image: radial-gradient(125% 120% at 50% 42%, #000 78%, transparent 100%);
 }
 .hero__cta {
   width: 100%;
@@ -233,10 +251,12 @@ h1, h2, h3 {
   color: var(--ice-light);
 }
 
-/* headline + sub — below the fold on mobile, revealed on scroll */
+/* headline + sub — below the fold on mobile, revealed on scroll.
+   Kept tight to the first screen so the reveal feels connected,
+   not separated by a big empty gap. */
 .hero__text {
   text-align: center;
-  padding-block: clamp(40px, 9vh, 96px) 0;
+  padding-block: clamp(8px, 3vh, 28px) clamp(8px, 3vh, 24px);
 }
 .hero__title {
   font-size: clamp(2.2rem, 8.5vw, 4.2rem);
@@ -260,7 +280,16 @@ h1, h2, h3 {
   }
 }
 @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
-  .hero--motion .hero__text { opacity: 0; transform: translateY(16px); }
+  /* In the motion experience the headline is pulled up close to the buttons
+     (the dead space below them is where the logo recedes), so the reveal
+     rises right under the CTAs instead of after a big gap. Gated to motion,
+     so the JS-off / reduced-motion layout keeps normal section spacing. */
+  .hero--motion .hero__text {
+    opacity: 0;
+    transform: translateY(28px);
+    margin-top: clamp(-104px, -11vh, -72px);
+    pointer-events: none;   /* hidden headline must not block the arrow */
+  }
   .hero--motion .hero__img,
   .hero--motion .hero__text { will-change: transform, opacity; }
 }
@@ -336,6 +365,122 @@ h1, h2, h3 {
   display: block;
   color: var(--ice);
   filter: drop-shadow(0 0 10px var(--glow)) drop-shadow(0 0 3px var(--glow));
+}
+
+/* =========================================================
+   NAHLÁŠENÍ ZÁVADY — primary report form
+   ========================================================= */
+.fault-form {
+  width: 100%;
+  max-width: 860px;
+  display: grid;
+  gap: 24px;
+  padding: clamp(20px, 5vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(10, 16, 24, 0.64);
+}
+.fault-form__group {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+.fault-form__group + .fault-form__group {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.fault-form__legend {
+  margin-bottom: 16px;
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-stretch: 115%;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ice-light);
+}
+.fault-form__grid {
+  display: grid;
+  gap: 16px;
+}
+.field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.field__label {
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.field__required,
+.field__optional {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.fault-form input,
+.fault-form select,
+.fault-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #071019;
+  color: var(--text);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.fault-form input,
+.fault-form select {
+  min-height: 52px;
+  padding: 0 14px;
+}
+.fault-form textarea {
+  min-height: 132px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+.fault-form input:focus,
+.fault-form select:focus,
+.fault-form textarea:focus {
+  border-color: var(--ice-light);
+  background: #091522;
+}
+.fault-form input[type="file"] {
+  min-height: auto;
+  padding: 12px;
+  color: var(--muted);
+}
+.fault-form input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  border: 1px solid var(--ice);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ice-light);
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+.fault-form__noscript,
+.fault-form__status {
+  border: 1px solid rgba(143, 224, 255, 0.35);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: rgba(56, 182, 255, 0.08);
+  color: var(--text);
+}
+.fault-form__noscript a {
+  color: var(--ice-light);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.fault-form__actions {
+  display: flex;
+  align-items: flex-start;
+}
+.fault-form__submit {
+  width: 100%;
 }
 
 /* =========================================================
@@ -506,15 +651,26 @@ h1, h2, h3 {
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
-.actionbar__btn--call {
+.actionbar__btn--report {
   background: var(--ice);
   color: #04070B;
   box-shadow: 0 0 24px var(--glow);
 }
-.actionbar__btn--wa {
+.actionbar__btn--call {
   background: transparent;
   color: var(--ice-light);
   border: 1px solid var(--ice);
+}
+
+@media (max-width: 767px) {
+  .fault-form__actions {
+    padding-bottom: 72px;
+  }
+
+  .actionbar__btn {
+    padding-inline: 8px;
+    font-size: clamp(0.8125rem, 3.3vw, 1rem);
+  }
 }
 
 /* =========================================================
@@ -583,6 +739,15 @@ h1, h2, h3 {
 
   /* body copy bumps to desktop size (DESIGN §2) */
   body { font-size: 1.0625rem; }
+
+  .fault-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .fault-form__submit {
+    width: auto;
+    min-width: 220px;
+  }
 
   /* Služby: 3 clean columns, hairlines are mobile-only */
   .services {

@@ -4,7 +4,8 @@
      1) Topbar gains .is-scrolled after 40px of scroll.
      2) Sticky action bar slides up once the hero CTAs leave view.
      3) Hero intro (mobile + motion OK): logo parallax + fade,
-        headline reveal on scroll, scroll-arrow fade. DESIGN §4.2/§7.
+         headline reveal on scroll, scroll-arrow fade. DESIGN §4.2/§7.
+     4) Fault report prototype submit: native validation + confirmation.
    All motion is gated behind (prefers-reduced-motion: no-preference)
    and uses transforms/opacity only.
    ========================================================= */
@@ -67,15 +68,18 @@
     var y = window.scrollY;
     var p = clamp(y / h, 0, 1);
 
-    // Logo: parallax down, subtle scale-up + fade as it recedes into the bg.
+    // Logo: recede into the background — gentle upward parallax + shrink +
+    // fade. Never translates DOWN (that would overlap the CTAs beneath it).
     heroImg.style.transform =
-      "translate3d(0," + (y * 0.18).toFixed(1) + "px,0) scale(" + (1 + p * 0.12).toFixed(3) + ")";
-    heroImg.style.opacity = clamp(1 - y / (h * 0.65), 0, 1).toFixed(3);
+      "translate3d(0," + (-(y * 0.06)).toFixed(1) + "px,0) scale(" + (1 - p * 0.10).toFixed(3) + ")";
+    heroImg.style.opacity = clamp(1 - y / (h * 0.55), 0, 1).toFixed(3);
 
-    // Headline: reveal almost immediately as scrolling starts.
-    var t = clamp((y - h * 0.06) / (h * 0.22), 0, 1);
+    // Headline: reveal almost immediately as scrolling starts, rising up.
+    var t = clamp((y - h * 0.05) / (h * 0.22), 0, 1);
     heroText.style.opacity = t.toFixed(3);
-    heroText.style.transform = "translateY(" + ((1 - t) * 16).toFixed(1) + "px)";
+    heroText.style.transform = "translateY(" + ((1 - t) * 28).toFixed(1) + "px)";
+    // re-enable interaction/selection only once it's actually showing
+    heroText.style.pointerEvents = t > 0.02 ? "auto" : "none";
 
     // Scroll arrow: fade out as soon as the user scrolls.
     if (heroScroll) {
@@ -123,5 +127,31 @@
     addMqListener(mobileQuery, syncHeroMotion);
     addMqListener(motionQuery, syncHeroMotion);
     window.addEventListener("resize", function () { if (heroActive) onHeroScroll(); }, { passive: true });
+  }
+
+  /* ---- 4. Fault report prototype submit ---- */
+  var faultForm = document.getElementById("fault-form");
+  var faultStatus = document.getElementById("fault-form-status");
+  var faultConfirmation = "Závada byla přijata. Budeme vás co nejdříve kontaktovat.";
+
+  if (faultForm && faultStatus) {
+    // Keep native validation available with JS off; take control only when JS runs.
+    faultForm.setAttribute("novalidate", "");
+
+    faultForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (!faultForm.checkValidity()) {
+        faultStatus.hidden = true;
+        faultStatus.textContent = "";
+        faultForm.reportValidity();
+        return;
+      }
+
+      faultForm.reset();
+      faultStatus.textContent = faultConfirmation;
+      faultStatus.hidden = false;
+      faultStatus.focus();
+    });
   }
 })();

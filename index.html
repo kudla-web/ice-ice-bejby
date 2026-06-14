@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="icon" href="assets/background.png" />
-  <link rel="stylesheet" href="css/style.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
 
   <!-- JSON-LD LocalBusiness stub -->
   <script type="application/ld+json">
@@ -90,14 +90,14 @@
     <section class="hero" id="hero" aria-label="Úvod">
       <div class="hero__inner container">
         <div class="hero__stage">
-          <img class="hero__img" src="assets/background.png" width="960" height="960" alt="Ice Ice Bejby — servis a údržba ledovačů" loading="eager" fetchpriority="high" decoding="async" />
+          <img class="hero__img" src="assets/background.png" width="1122" height="1402" alt="Ice Ice Bejby — servis a údržba ledovačů" loading="eager" fetchpriority="high" decoding="async" />
 
           <div class="hero__cta" id="hero-cta">
-            <a class="btn btn--primary" href="tel:+420000000000">Zavolat</a>
-            <a class="btn btn--secondary" href="https://wa.me/420000000000">WhatsApp</a>
+            <a class="btn btn--primary" href="#nahlaseni-zavady">Nahlásit závadu</a>
+            <a class="btn btn--secondary" href="tel:+420000000000">Zavolat</a>
           </div>
 
-          <a class="hero__scroll" href="#promise" aria-hidden="true" tabindex="-1">
+          <a class="hero__scroll" href="#nahlaseni-zavady" aria-hidden="true" tabindex="-1">
             <svg width="26" height="26" aria-hidden="true"><use href="#i-chevron" /></svg>
           </a>
         </div>
@@ -109,7 +109,121 @@
       </div>
     </section>
 
-    <!-- ============ PROMISE STRIP (DESIGN §4.3, CONTENT §2) ============ -->
+    <!-- ============ NAHLÁŠENÍ ZÁVADY (DESIGN §4.3, CONTENT §2) ============ -->
+    <section class="section fault-report" id="nahlaseni-zavady" aria-labelledby="nahlaseni-zavady-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">Nahlášení závady</p>
+          <h2 class="section__title" id="nahlaseni-zavady-title">Nahlaste závadu</h2>
+        </header>
+
+        <form class="fault-form" id="fault-form" action="#" method="post" enctype="multipart/form-data">
+          <fieldset class="fault-form__group">
+            <legend class="fault-form__legend">Údaje o provozovně</legend>
+
+            <div class="fault-form__grid">
+              <label class="field" for="provozovna-nazev">
+                <span class="field__label">Název provozovny <span class="field__required">povinné</span></span>
+                <input id="provozovna-nazev" name="provozovna_nazev" type="text" autocomplete="organization" required />
+              </label>
+
+              <label class="field" for="provozovna-adresa">
+                <span class="field__label">Adresa <span class="field__required">povinné</span></span>
+                <input id="provozovna-adresa" name="provozovna_adresa" type="text" autocomplete="street-address" required />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fault-form__group">
+            <legend class="fault-form__legend">Kontaktní osoba</legend>
+
+            <div class="fault-form__grid">
+              <label class="field" for="kontakt-jmeno">
+                <span class="field__label">Jméno <span class="field__required">povinné</span></span>
+                <input id="kontakt-jmeno" name="kontakt_jmeno" type="text" autocomplete="name" required />
+              </label>
+
+              <label class="field" for="kontakt-telefon">
+                <span class="field__label">Telefon <span class="field__required">povinné</span></span>
+                <input id="kontakt-telefon" name="kontakt_telefon" type="tel" autocomplete="tel" inputmode="tel" required />
+              </label>
+
+              <label class="field" for="kontakt-email">
+                <span class="field__label">E-mail <span class="field__optional">volitelně</span></span>
+                <input id="kontakt-email" name="kontakt_email" type="email" autocomplete="email" />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fault-form__group">
+            <legend class="fault-form__legend">Typ problému</legend>
+
+            <label class="field" for="typ-problemu">
+              <span class="field__label">Vyberte problém <span class="field__required">povinné</span></span>
+              <select id="typ-problemu" name="typ_problemu" required>
+                <option value="" selected disabled>Vyberte typ problému</option>
+                <option value="Nevyrábí led">Nevyrábí led</option>
+                <option value="Nízká produkce ledu">Nízká produkce ledu</option>
+                <option value="Únik vody">Únik vody</option>
+                <option value="Chybové hlášení">Chybové hlášení</option>
+                <option value="Jiný problém">Jiný problém</option>
+              </select>
+            </label>
+          </fieldset>
+
+          <fieldset class="fault-form__group">
+            <legend class="fault-form__legend">Výrobník</legend>
+
+            <div class="fault-form__grid">
+              <label class="field" for="vyrobnik-znacka">
+                <span class="field__label">Značka <span class="field__required">povinné</span></span>
+                <input id="vyrobnik-znacka" name="vyrobnik_znacka" type="text" required />
+              </label>
+
+              <label class="field" for="vyrobnik-model">
+                <span class="field__label">Model <span class="field__optional">volitelné</span></span>
+                <input id="vyrobnik-model" name="vyrobnik_model" type="text" />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fault-form__group">
+            <legend class="fault-form__legend">Přílohy</legend>
+
+            <label class="field" for="prilohy">
+              <span class="field__label">Nahrání fotografie nebo videa <span class="field__optional">volitelné</span></span>
+              <input id="prilohy" name="prilohy" type="file" accept="image/*,video/*" multiple />
+            </label>
+          </fieldset>
+
+          <fieldset class="fault-form__group">
+            <legend class="fault-form__legend">Poznámka</legend>
+
+            <label class="field" for="poznamka">
+              <span class="field__label">Volné textové pole</span>
+              <textarea id="poznamka" name="poznamka" rows="5"></textarea>
+            </label>
+          </fieldset>
+
+          <noscript>
+            <p class="fault-form__noscript">Formulářové potvrzení vyžaduje JavaScript. Pro nahlášení závady prosím zavolejte na <a href="tel:+420000000000">+420&nbsp;000&nbsp;000&nbsp;000</a>.</p>
+          </noscript>
+
+          <p class="fault-form__status" id="fault-form-status" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+          <div class="fault-form__actions">
+            <button class="btn btn--primary fault-form__submit" type="submit">Odeslat závadu</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Frost divider (DESIGN §4: between every section) -->
+    <div class="frost-divider" aria-hidden="true">
+      <svg width="22" height="22"><use href="#i-snowflake" /></svg>
+    </div>
+
+    <!-- ============ PROMISE STRIP (DESIGN §4.4, CONTENT §3) ============ -->
     <section class="section promise" id="promise">
       <div class="container">
         <p class="promise__text">Porucha ledovače znamená ztráty každou hodinu. Proto reagujeme okamžitě — váš problém dokážeme vyřešit <strong class="promise__accent">ASAP</strong>.</p>
@@ -121,7 +235,7 @@
       <svg width="22" height="22"><use href="#i-snowflake" /></svg>
     </div>
 
-    <!-- ============ SLUŽBY (DESIGN §4.4, CONTENT §3) ============ -->
+    <!-- ============ SLUŽBY (DESIGN §4.5, CONTENT §4) ============ -->
     <section class="section" id="sluzby" aria-labelledby="sluzby-title">
       <div class="container">
         <header class="section__head">
@@ -154,7 +268,7 @@
       <svg width="22" height="22"><use href="#i-snowflake" /></svg>
     </div>
 
-    <!-- ============ JAK TO PROBÍHÁ (DESIGN §4.5, CONTENT §4) ============ -->
+    <!-- ============ JAK TO PROBÍHÁ (DESIGN §4.6, CONTENT §5) ============ -->
     <section class="section" id="postup" aria-labelledby="postup-title">
       <div class="container">
         <header class="section__head">
@@ -187,7 +301,7 @@
       <svg width="22" height="22"><use href="#i-snowflake" /></svg>
     </div>
 
-    <!-- ============ PROČ MY (DESIGN §4.6, CONTENT §5) ============ -->
+    <!-- ============ PROČ MY (DESIGN §4.7, CONTENT §6) ============ -->
     <section class="section" id="proc-my" aria-labelledby="proc-my-title">
       <div class="container">
         <header class="section__head">
@@ -217,7 +331,7 @@
       <svg width="22" height="22"><use href="#i-snowflake" /></svg>
     </div>
 
-    <!-- ============ CENÍK (DESIGN §4.7, CONTENT §6) ============ -->
+    <!-- ============ CENÍK (DESIGN §4.8, CONTENT §7) ============ -->
     <section class="section" id="cenik" aria-labelledby="cenik-title">
       <div class="container">
         <header class="section__head">
@@ -235,7 +349,7 @@
       <svg width="22" height="22"><use href="#i-snowflake" /></svg>
     </div>
 
-    <!-- ============ KONTAKT (DESIGN §4.8, CONTENT §7) ============ -->
+    <!-- ============ KONTAKT (DESIGN §4.9, CONTENT §8) ============ -->
     <section class="section" id="kontakt" aria-labelledby="kontakt-title">
       <div class="container">
         <header class="section__head">
@@ -259,7 +373,7 @@
 
   </main>
 
-  <!-- ================= FOOTER (DESIGN §4.9, CONTENT §7) ================= -->
+  <!-- ================= FOOTER (DESIGN §4.10, CONTENT §8) ================= -->
   <footer class="footer">
     <div class="container">
       <p class="footer__line">© 2026 Ice Ice Bejby — Servis a údržba ledovačů</p>
@@ -267,11 +381,11 @@
   </footer>
 
   <!-- ========= STICKY BOTTOM ACTION BAR (DESIGN §5) ========= -->
-  <div class="actionbar" id="actionbar" aria-label="Rychlý kontakt">
+  <div class="actionbar" id="actionbar" aria-label="Rychlé akce">
+    <a class="actionbar__btn actionbar__btn--report" href="#nahlaseni-zavady">Nahlásit závadu</a>
     <a class="actionbar__btn actionbar__btn--call" href="tel:+420000000000">Zavolat</a>
-    <a class="actionbar__btn actionbar__btn--wa" href="https://wa.me/420000000000">WhatsApp</a>
   </div>
 
-  <script src="js/main.js?v=3" defer></script>
+  <script src="js/main.js?v=5" defer></script>
 </body>
 </html>
