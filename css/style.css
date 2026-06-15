@@ -176,6 +176,25 @@ h1, h2, h3 {
 .topbar__phone-icon { display: block; }
 .topbar__phone-text { display: none; }   /* mobile: icon only */
 
+/* WhatsApp lives next to the phone — always visible, both breakpoints */
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.topbar__wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  color: var(--ice-light);
+}
+.topbar__wa svg { display: block; }
+@media (hover: hover) {
+  .topbar__wa:hover { color: var(--ice); }
+}
+
 /* scrolled state — added by JS after 40px */
 .topbar.is-scrolled {
   background: rgba(10, 16, 24, 0.72);
@@ -230,13 +249,21 @@ h1, h2, h3 {
   -webkit-mask-image: radial-gradient(125% 120% at 50% 42%, #000 78%, transparent 100%);
   mask-image: radial-gradient(125% 120% at 50% 42%, #000 78%, transparent 100%);
 }
+/* three actions: primary "Nahlásit závadu" full-width, then Zavolat + WhatsApp */
 .hero__cta {
   width: 100%;
+  max-width: 360px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hero__cta-report { width: 100%; }
+.hero__cta-row {
   display: flex;
   gap: 10px;
-  justify-content: center;
 }
-.hero__cta .btn { flex: 1 1 0; max-width: 220px; }   /* mobile: share the row */
+.hero__cta-row .btn { flex: 1 1 0; }
 
 /* scroll-down hint, anchored to the bottom of the first screen */
 .hero__scroll {
@@ -639,7 +666,7 @@ h1, h2, h3 {
 .actionbar.is-visible { transform: translateY(0); }
 
 .actionbar__btn {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -651,12 +678,20 @@ h1, h2, h3 {
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
+/* primary report keeps the prominent label; call + WhatsApp are compact icons */
 .actionbar__btn--report {
   background: var(--ice);
   color: #04070B;
   box-shadow: 0 0 24px var(--glow);
 }
-.actionbar__btn--call {
+.actionbar__btn--icon {
+  flex: 0 0 auto;
+  width: 56px;
+  padding-inline: 0;
+}
+.actionbar__btn--icon svg { display: block; }
+.actionbar__btn--call,
+.actionbar__btn--wa {
   background: transparent;
   color: var(--ice-light);
   border: 1px solid var(--ice);
@@ -729,10 +764,17 @@ h1, h2, h3 {
     grid-area: cta;
     align-self: start;
     width: auto;
+    max-width: none;
+    margin-inline: 0;
+    flex-direction: row;       /* all three in one row on desktop */
+    align-items: center;
+    flex-wrap: wrap;
     gap: 14px;
     justify-content: flex-start;
   }
-  .hero__cta .btn { flex: 0 0 auto; min-width: 168px; max-width: none; }
+  .hero__cta-report { width: auto; }
+  .hero__cta-row { gap: 14px; }
+  .hero__cta .btn { flex: 0 0 auto; min-width: 160px; max-width: none; }
 
   /* sticky bar is mobile-only */
   .actionbar { display: none; }
