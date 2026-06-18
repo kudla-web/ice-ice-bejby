@@ -215,7 +215,11 @@ h1, h2, h3 {
    Base CSS keeps the headline visible so the site is fully usable
    with JS off / reduced motion. Desktop reassembles via grid.
    ========================================================= */
-.hero { position: relative; }
+.hero {
+  --hero-heading-gap: clamp(48px, 7vh, 76px);
+  --hero-reveal-overlap: 0px;
+  position: relative;
+}
 .hero__inner {
   width: 100%;
   display: flex;
@@ -279,16 +283,16 @@ h1, h2, h3 {
 }
 
 /* headline + sub — below the fold on mobile, revealed on scroll.
-   Kept tight to the first screen so the reveal feels connected,
-   not separated by a big empty gap. */
+   The top padding keeps the CTA-to-heading gap clean and repeatable. */
 .hero__text {
   text-align: center;
-  padding-block: clamp(8px, 3vh, 28px) clamp(8px, 3vh, 24px);
+  padding-block: var(--hero-heading-gap) clamp(8px, 3vh, 24px);
 }
 .hero__title {
   font-size: clamp(2.2rem, 8.5vw, 4.2rem);
   font-weight: 800;
 }
+.hero__accent { color: var(--ice); }
 .hero__sub {
   margin: 14px auto 0;
   max-width: 42ch;
@@ -307,14 +311,12 @@ h1, h2, h3 {
   }
 }
 @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
-  /* In the motion experience the headline is pulled up close to the buttons
-     (the dead space below them is where the logo recedes), so the reveal
-     rises right under the CTAs instead of after a big gap. Gated to motion,
-     so the JS-off / reduced-motion layout keeps normal section spacing. */
+  /* Keep the reveal close enough to feel connected, with enough air under
+     the CTAs that the headline never collides visually with the controls. */
   .hero--motion .hero__text {
     opacity: 0;
     transform: translateY(28px);
-    margin-top: clamp(-104px, -11vh, -72px);
+    margin-top: calc(var(--hero-reveal-overlap) * -1);
     pointer-events: none;   /* hidden headline must not block the arrow */
   }
   .hero--motion .hero__img,
@@ -363,8 +365,13 @@ h1, h2, h3 {
   letter-spacing: 0.01em;
   line-height: 1.16;
   text-transform: uppercase;
-  font-size: clamp(1.55rem, 5.8vw, 2.8rem);
+  /* Mobile: a smaller, vw-tracked size keeps the block at ~6 lines, which is
+     where text-wrap:balance engages — so the left-aligned lines come out even
+     (~2 words each) with no ragged "staircase". Desktop restores the big type
+     (few lines, balance still evens them). */
+  font-size: clamp(1rem, 4.85vw, 1.4rem);
   max-width: 30ch;
+  text-wrap: balance;
 }
 .promise__accent { color: var(--ice); }
 
@@ -778,6 +785,10 @@ h1, h2, h3 {
 
   /* sticky bar is mobile-only */
   .actionbar { display: none; }
+
+  /* Promise strip: restore the big display size on desktop. Few lines here,
+     so text-wrap:balance (base) keeps them even and left-aligned. */
+  .promise__text { font-size: clamp(2rem, 5.8vw, 2.8rem); }
 
   /* body copy bumps to desktop size (DESIGN §2) */
   body { font-size: 1.0625rem; }
