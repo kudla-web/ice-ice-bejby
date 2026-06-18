@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="icon" href="assets/background.png" />
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
 
   <!-- JSON-LD LocalBusiness stub -->
   <script type="application/ld+json">
@@ -136,12 +136,12 @@
 
             <div class="fault-form__grid">
               <label class="field" for="provozovna-nazev">
-                <span class="field__label">Název provozovny <span class="field__required">povinné</span></span>
+                <span class="field__label">Název provozovny <span class="field__required" aria-hidden="true">*</span></span>
                 <input id="provozovna-nazev" name="provozovna_nazev" type="text" autocomplete="organization" required />
               </label>
 
               <label class="field" for="provozovna-adresa">
-                <span class="field__label">Adresa <span class="field__required">povinné</span></span>
+                <span class="field__label">Adresa <span class="field__required" aria-hidden="true">*</span></span>
                 <input id="provozovna-adresa" name="provozovna_adresa" type="text" autocomplete="street-address" required />
               </label>
             </div>
@@ -152,12 +152,12 @@
 
             <div class="fault-form__grid">
               <label class="field" for="kontakt-jmeno">
-                <span class="field__label">Jméno <span class="field__required">povinné</span></span>
+                <span class="field__label">Jméno <span class="field__required" aria-hidden="true">*</span></span>
                 <input id="kontakt-jmeno" name="kontakt_jmeno" type="text" autocomplete="name" required />
               </label>
 
               <label class="field" for="kontakt-telefon">
-                <span class="field__label">Telefon <span class="field__required">povinné</span></span>
+                <span class="field__label">Telefon <span class="field__required" aria-hidden="true">*</span></span>
                 <input id="kontakt-telefon" name="kontakt_telefon" type="tel" autocomplete="tel" inputmode="tel" required />
               </label>
 
@@ -172,7 +172,7 @@
             <legend class="fault-form__legend">Typ problému</legend>
 
             <label class="field" for="typ-problemu">
-              <span class="field__label">Vyberte problém <span class="field__required">povinné</span></span>
+              <span class="field__label">Vyberte problém <span class="field__required" aria-hidden="true">*</span></span>
               <select id="typ-problemu" name="typ_problemu" required>
                 <option value="" selected disabled>Vyberte typ problému</option>
                 <option value="Nevyrábí led">Nevyrábí led</option>
@@ -189,7 +189,7 @@
 
             <div class="fault-form__grid">
               <label class="field" for="vyrobnik-znacka">
-                <span class="field__label">Značka <span class="field__required">povinné</span></span>
+                <span class="field__label">Značka <span class="field__required" aria-hidden="true">*</span></span>
                 <input id="vyrobnik-znacka" name="vyrobnik_znacka" type="text" required />
               </label>
 

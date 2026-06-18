@@ -455,6 +455,14 @@ h1, h2, h3 {
   font-weight: 500;
   white-space: nowrap;
 }
+/* required marker is now an asterisk — accent it and make it legible */
+.field__required {
+  color: var(--ice);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+}
 .fault-form input,
 .fault-form select,
 .fault-form textarea {
