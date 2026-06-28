@@ -163,7 +163,8 @@
 
       // Hlídáme celkovou velikost příloh, ať uživatel nečeká na tichý fail.
       var fileInput = faultForm.querySelector('input[type="file"]');
-      if (fileInput && fileInput.files.length) {
+      var hasFiles = fileInput && fileInput.files.length > 0;
+      if (hasFiles) {
         var total = 0;
         for (var i = 0; i < fileInput.files.length; i++) total += fileInput.files[i].size;
         if (total > MAX_ATTACH_BYTES) {
@@ -173,6 +174,8 @@
       }
 
       var data = new FormData(faultForm);
+      // Prázdný file input posílá Web3Forms 400 (Bad Request) — bez příloh ho odebereme.
+      if (!hasFiles && fileInput) data.delete(fileInput.name);
 
       if (faultSubmitBtn) {
         faultSubmitBtn.disabled = true;
