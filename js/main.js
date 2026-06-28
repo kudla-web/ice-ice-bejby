@@ -133,7 +133,7 @@
   var faultForm = document.getElementById("fault-form");
   var faultStatus = document.getElementById("fault-form-status");
   var faultConfirmation = "Závada byla přijata. Budeme vás co nejdříve kontaktovat.";
-  var faultError = "Odeslání se nezdařilo. Zavolejte nám prosím na +420 000 000 000.";
+  var faultError = "Odeslání se nezdařilo. Zavolejte nám prosím na +420 731 529 946.";
 
   if (faultForm && faultStatus) {
     // Keep native validation available with JS off; take control only when JS runs.
