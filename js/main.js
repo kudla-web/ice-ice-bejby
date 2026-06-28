@@ -134,9 +134,6 @@
   var faultStatus = document.getElementById("fault-form-status");
   var faultConfirmation = "Závada byla přijata. Budeme vás co nejdříve kontaktovat.";
   var faultError = "Odeslání se nezdařilo. Zavolejte nám prosím na +420 000 000 000.";
-  // Web3Forms doručuje přílohy jako e-mailové attachmenty; nad limit to spadne.
-  // Větší videa raději odmítneme tady a nasměrujeme na WhatsApp.
-  var MAX_ATTACH_BYTES = 9 * 1024 * 1024; // ~9 MB celkem za všechny přílohy
 
   if (faultForm && faultStatus) {
     // Keep native validation available with JS off; take control only when JS runs.
@@ -161,21 +158,7 @@
         return;
       }
 
-      // Hlídáme celkovou velikost příloh, ať uživatel nečeká na tichý fail.
-      var fileInput = faultForm.querySelector('input[type="file"]');
-      var hasFiles = fileInput && fileInput.files.length > 0;
-      if (hasFiles) {
-        var total = 0;
-        for (var i = 0; i < fileInput.files.length; i++) total += fileInput.files[i].size;
-        if (total > MAX_ATTACH_BYTES) {
-          showStatus("Přílohy jsou příliš velké (max 9 MB). Větší video pošlete prosím přes WhatsApp.", true);
-          return;
-        }
-      }
-
       var data = new FormData(faultForm);
-      // Prázdný file input posílá Web3Forms 400 (Bad Request) — bez příloh ho odebereme.
-      if (!hasFiles && fileInput) data.delete(fileInput.name);
 
       if (faultSubmitBtn) {
         faultSubmitBtn.disabled = true;
