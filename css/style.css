@@ -655,10 +655,11 @@ h1, h2, h3 {
   text-decoration-color: rgba(143, 224, 255, 0.4);
   text-underline-offset: 4px;
 }
-.contact__billing {
-  margin-top: 28px;
+.fault-form__privacy {
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }
 @media (hover: hover) {
   .contact__phone:hover { color: var(--ice-light); }
