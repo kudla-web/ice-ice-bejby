@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="icon" href="assets/background.png" />
-  <link rel="stylesheet" href="css/style.css?v=12" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
 
   <!-- JSON-LD LocalBusiness stub -->
   <script type="application/ld+json">
@@ -130,7 +130,14 @@
           <h2 class="section__title" id="nahlaseni-zavady-title">Nahlaste závadu</h2>
         </header>
 
-        <form class="fault-form" id="fault-form" action="#" method="post" enctype="multipart/form-data">
+        <form class="fault-form" id="fault-form" action="https://api.web3forms.com/submit" method="post" enctype="multipart/form-data">
+          <!-- Web3Forms: doručení do e-mailu, bez backendu -->
+          <input type="hidden" name="access_key" value="605a3034-d537-41d3-9128-6642ecd01242" />
+          <input type="hidden" name="subject" value="Nahlášení závady – Ice Ice Bejby" />
+          <input type="hidden" name="from_name" value="Ice Ice Bejby — formulář" />
+          <!-- Honeypot proti spamu: lidé toto pole nevyplní, boti ano -->
+          <input type="checkbox" name="botcheck" class="visually-hidden" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
           <fieldset class="fault-form__group">
             <legend class="fault-form__legend">Údaje o provozovně</legend>
 
@@ -404,6 +411,6 @@
     </a>
   </div>
 
-  <script src="js/main.js?v=6" defer></script>
+  <script src="js/main.js?v=7" defer></script>
 </body>
 </html>

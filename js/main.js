@@ -133,10 +133,23 @@
   var faultForm = document.getElementById("fault-form");
   var faultStatus = document.getElementById("fault-form-status");
   var faultConfirmation = "Závada byla přijata. Budeme vás co nejdříve kontaktovat.";
+  var faultError = "Odeslání se nezdařilo. Zavolejte nám prosím na +420 000 000 000.";
+  // Web3Forms doručuje přílohy jako e-mailové attachmenty; nad limit to spadne.
+  // Větší videa raději odmítneme tady a nasměrujeme na WhatsApp.
+  var MAX_ATTACH_BYTES = 9 * 1024 * 1024; // ~9 MB celkem za všechny přílohy
 
   if (faultForm && faultStatus) {
     // Keep native validation available with JS off; take control only when JS runs.
     faultForm.setAttribute("novalidate", "");
+
+    var faultSubmitBtn = faultForm.querySelector(".fault-form__submit");
+
+    function showStatus(message, isError) {
+      faultStatus.textContent = message;
+      faultStatus.hidden = false;
+      faultStatus.classList.toggle("fault-form__status--error", !!isError);
+      faultStatus.focus();
+    }
 
     faultForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -148,10 +161,42 @@
         return;
       }
 
-      faultForm.reset();
-      faultStatus.textContent = faultConfirmation;
-      faultStatus.hidden = false;
-      faultStatus.focus();
+      // Hlídáme celkovou velikost příloh, ať uživatel nečeká na tichý fail.
+      var fileInput = faultForm.querySelector('input[type="file"]');
+      if (fileInput && fileInput.files.length) {
+        var total = 0;
+        for (var i = 0; i < fileInput.files.length; i++) total += fileInput.files[i].size;
+        if (total > MAX_ATTACH_BYTES) {
+          showStatus("Přílohy jsou příliš velké (max 9 MB). Větší video pošlete prosím přes WhatsApp.", true);
+          return;
+        }
+      }
+
+      var data = new FormData(faultForm);
+
+      if (faultSubmitBtn) {
+        faultSubmitBtn.disabled = true;
+        faultSubmitBtn.dataset.label = faultSubmitBtn.textContent;
+        faultSubmitBtn.textContent = "Odesílám…";
+      }
+
+      fetch(faultForm.action, { method: "POST", body: data })
+        .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+        .then(function (result) {
+          if (result.ok && result.json && result.json.success) {
+            faultForm.reset();
+            showStatus(faultConfirmation, false);
+          } else {
+            showStatus(faultError, true);
+          }
+        })
+        .catch(function () { showStatus(faultError, true); })
+        .finally(function () {
+          if (faultSubmitBtn) {
+            faultSubmitBtn.disabled = false;
+            faultSubmitBtn.textContent = faultSubmitBtn.dataset.label || "Odeslat závadu";
+          }
+        });
     });
   }
 })();
